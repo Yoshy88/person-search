@@ -1,4 +1,4 @@
-import { PrismaLibSql } from '@prisma/adapter-libsql'
+import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '@/lib/generated/prisma/client'
 
 const databaseUrl = process.env.DATABASE_URL
@@ -16,7 +16,7 @@ type GlobalWithPrisma = typeof globalThis & {
 const globalForPrisma = globalThis as GlobalWithPrisma
 
 function createPrismaClient() {
-  const adapter = new PrismaLibSql({ url: databaseUrl })
+  const adapter = new PrismaPg({ connectionString: databaseUrl })
   return new PrismaClient({ adapter })
 }
 

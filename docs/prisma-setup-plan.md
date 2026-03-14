@@ -23,11 +23,20 @@ Install Prisma in this Next.js 16 project and scaffold a minimal working local s
 - Prisma Client generated to `lib/generated/prisma`
 
 ## Notes
-- Default datasource is SQLite with `DATABASE_URL="file:./dev.db"` in `.env`.
+- Datasource is now PostgreSQL for Neon/Vercel deployment.
+- `DATABASE_URL` must be a Neon/Postgres connection string.
 - Schema validation passed.
 - Prisma Client generation passed.
 - Added and applied Prisma migration `20260314012559_add_user_model` for the `User` table.
-- Added Prisma 7 SQLite runtime adapter with `@prisma/adapter-better-sqlite3` and `better-sqlite3`.
+- Runtime adapter switched to Prisma 7 Postgres adapter: `@prisma/adapter-pg` with `pg`.
 - Server actions in `app/actions/actions.ts` now use Prisma CRUD instead of in-memory data.
 - Server action inputs/outputs are validated with shared Zod schemas before returning data to UI.
 - This project now has both `pnpm-lock.yaml` and `package-lock.json` because `@prisma/client` was initially installed with npm.
+
+## Deployment Commands
+- `pnpm exec prisma generate`
+- `pnpm exec prisma migrate deploy`
+
+## Before First Neon Deploy
+- Set `DATABASE_URL` in Vercel project environment variables.
+- Ensure migration files are present in the repository and pushed to GitHub.
