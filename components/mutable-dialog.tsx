@@ -3,9 +3,10 @@
 'use client';
 
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ReactNode } from 'react';
 import { useForm, UseFormReturn, FieldValues, DefaultValues } from 'react-hook-form';
-import { Button } from "@/components/ui/button";
+import { useRouter } from 'next/navigation';
+import { Button, ButtonProps } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -28,11 +29,17 @@ interface GenericDialogProps<T extends FieldValues> {
   FormComponent: React.ComponentType<{ form: UseFormReturn<T> }>;
   action?: (data: T) => Promise<ActionState<T>>;
   triggerButtonLabel?: string;
+  triggerIcon?: ReactNode;
   addDialogTitle?: string;
   editDialogTitle?: string;
   dialogDescription?: string;
   submitButtonLabel?: string;
   defaultValues?: DefaultValues<T>; // If present, this will indicate edit mode
+  triggerButtonVariant?: ButtonProps['variant'];
+  triggerButtonSize?: ButtonProps['size'];
+  triggerButtonClassName?: string;
+  triggerAriaLabel?: string;
+  hideTriggerLabel?: boolean;
 }
 
 export default function MutableDialog<T extends FieldValues>({
@@ -41,12 +48,19 @@ export default function MutableDialog<T extends FieldValues>({
   action, 
   defaultValues,
   triggerButtonLabel = defaultValues ? 'Edit' : 'Add',
+  triggerIcon,
   addDialogTitle = 'Add',
   editDialogTitle = 'Edit',
   dialogDescription = defaultValues ? 'Make changes to your item here. Click save when you\'re done.' : 'Fill out the form below to add a new item.',
   submitButtonLabel = defaultValues ? 'Save' : 'Add',
+  triggerButtonVariant = 'default',
+  triggerButtonSize = 'default',
+  triggerButtonClassName,
+  triggerAriaLabel,
+  hideTriggerLabel = false,
 }: GenericDialogProps<T>) {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
 
   const form = useForm<T>({
     resolver: async (values) => {
@@ -95,6 +109,7 @@ export default function MutableDialog<T extends FieldValues>({
         description: toastMessage,
         variant: "default",
       });
+      router.refresh();
     } else {
       const toastMessage = actions.message;
       console.log('toastMessage:', toastMessage);
@@ -110,7 +125,15 @@ export default function MutableDialog<T extends FieldValues>({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button >{triggerButtonLabel}</Button>
+        <Button
+          variant={triggerButtonVariant}
+          size={triggerButtonSize}
+          className={triggerButtonClassName}
+          aria-label={triggerAriaLabel ?? triggerButtonLabel}
+        >
+          {triggerIcon && <span className={hideTriggerLabel ? '' : 'mr-2'}>{triggerIcon}</span>}
+          {!hideTriggerLabel && triggerButtonLabel}
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

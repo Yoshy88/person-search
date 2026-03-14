@@ -13,3 +13,6 @@ export type User = z.infer<typeof userSchema>
 
 export const userFormSchema = userSchema.omit({ id: true })
 export type UserFormData = z.infer<typeof userFormSchema>
+
+export const userIdSchema = z.string().min(1, { message: 'User id is required.' })
+export const userListSchema = z.array(userSchema)

@@ -1,6 +1,7 @@
 // app/components/user-dialog.tsx
 'use client'
 
+import { Plus } from 'lucide-react'
 import {  addUser } from '@/app/actions/actions'
 import { userFormSchema, User, UserFormData } from '@/app/actions/schemas'
 
@@ -26,15 +27,18 @@ export function UserDialog() {
   }
 
   return (
-    <MutableDialog<UserFormData>
-      formSchema={userFormSchema}
-      FormComponent={UserForm}
-      action={handleAddUser}
-      triggerButtonLabel="Add User"
-      addDialogTitle="Add New User"
-      dialogDescription="Fill out the form below to add a new user."
-      submitButtonLabel="Save"
-      defaultValues={{ name: '', email: '', phoneNumber: '' }} // Default empty values
-    />
+    <div className="flex justify-center my-6">
+      <MutableDialog<UserFormData>
+        formSchema={userFormSchema}
+        FormComponent={UserForm}
+        action={handleAddUser}
+        triggerButtonLabel="Add User"
+        triggerIcon={<Plus className="w-4 h-4" />}
+        addDialogTitle="Add New User"
+        dialogDescription="Fill out the form below to add a new user."
+        submitButtonLabel="Save"
+        defaultValues={{ name: '', email: '', phoneNumber: '' }} // Default empty values
+      />
+    </div>
   )
 }
